@@ -1,0 +1,52 @@
+$unassigned : #696969;
+$completed :#49aa19;
+$reject : #d32029;
+$assigned : #d89614;
+$inProgress : #2b4acb;
+$failed : rgb(170, 71, 89);
+
+.tst{
+    padding: 5px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.unassigned{
+    
+    background-color: $unassigned;
+}
+
+.completed{
+    background-color: $completed;
+}
+
+.reject{
+    background-color: $reject;
+}
+
+.assigned{
+    background-color: $assigned;
+}
+.review {
+    background-color: $assigned;
+}
+.inProgress{
+    background-color: $inProgress;
+}
+
+.Passed{
+    background-color: $completed !important;
+    color:#fff;
+}
+.Failed, .Not-Applicable, .Blocked{
+    background-color: $failed !important;
+    color:#fff;
+}
+.anticon-caret-down{
+    float:right;
+}
+.tstepStatus{
+    width: 120px;
+    background-color: #77a10e;
+}

@@ -1,0 +1,6 @@
+.user-span {
+    margin: 0px !important;
+    margin-left: -1px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+}

@@ -1,0 +1,33 @@
+.chkbx{
+    display: block;
+    float: left;
+    height: 25px;
+    width: 25px;
+    background-color: rgb(196, 196, 196);
+    border-radius: 50%;
+}
+
+span{
+    margin: 5px;
+}
+span:hover{
+    cursor: pointer;
+}
+.edit-actRslt{
+    position:absolute;
+    bottom: -9px;
+    right: -7px;
+    color: #fff;
+    font-size: 14px;
+}
+.edit-actRslt:hover{
+    color: #49aa19;
+}
+.dot{
+    display: block;
+    float: left;
+    height: 15px;
+    width: 15px;
+    background-color: rgb(94, 94, 94);
+    border-radius: 50%;
+}

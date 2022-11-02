@@ -1,0 +1,44 @@
+.header{
+    height: 60px;
+    width:100%;
+    border-bottom:1px solid #696969;
+}
+.header span{
+    line-height: 60px;
+}
+.drawer-icon{
+    font-size: 24px;
+    color:#fff;
+}
+.drawer-text{
+    margin-left: 30px;
+}
+.merchant-page{
+    color:#fff;
+}
+.sidenav---sidenav-subnav---1EN61{
+    background:#696969;
+    border:none !important;
+    color:#fff;
+    
+}
+nav{
+    position: fixed !important;
+}
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T .sidenav---navicon---3gCRo > *, .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f{
+    color:#fff;
+}
+.sidenav---navitem---9uL5T:hover{
+    background: #022768 !important;
+}
+.ul-usermenu{
+    width:100px;
+    position: absolute;
+    bottom:-38px;
+    right:0px;
+    z-index: 999;
+}
+li{
+    list-style: none;
+    border-bottom: 1px solid #494949;
+}

@@ -1,0 +1,21 @@
+ 
+.search-icon{
+    position: absolute;
+    right: 10px;
+    top: 36px;
+}
+.relative{
+    position: relative;
+}
+.runtest-container{
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.chart-container {
+    position: relative;
+    margin: auto;
+}
+.container-div{
+    background-color:#FFF;
+}
