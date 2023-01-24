@@ -60,7 +60,13 @@ function ObjectiveViewTable(props) {
           >
             {item.sc_title}
           </td>
-          
+          <td
+            className={rowBg(key) + " hoverable"}
+            data-id={key}
+            key={uniqid()}
+          >
+            {item.to_customertype}
+          </td>
         </tr>
       </>
     );
@@ -77,17 +83,17 @@ function ObjectiveViewTable(props) {
 
   
   return (
-    <table border="1"  className='tbl-no-style' key={Math.random()}  >
-      <thead> 
-        <tr  key={Math.random() }>
-          <th  key={Math.random()}>Area</th>
-          <th  key={ Math.random()}>Group</th>
-          <th  key={Math.random()}>Objectives</th>
-          <th  key={Math.random() }>Description</th>
-          <th  key={Math.random()}>Objective Class</th>
-          <th  key={ Math.random()}>Scenario Code</th>
-          <th  key={Math.random()}>Scenario Title</th>
-       
+    <table border="1" className="tbl-no-style" key={Math.random()}>
+      <thead>
+        <tr key={Math.random()}>
+          <th key={Math.random()}>Area</th>
+          <th key={Math.random()}>Group</th>
+          <th key={Math.random()}>Objectives</th>
+          <th key={Math.random()}>Description</th>
+          <th key={Math.random()}>Objective Class</th>
+          <th key={Math.random()}>Scenario Code</th>
+          <th key={Math.random()}>Scenario Title</th>
+          <th key={Math.random()}>Customer Type</th>
         </tr>
       </thead>
       <tbody key={uniqid()}>
@@ -95,7 +101,7 @@ function ObjectiveViewTable(props) {
           rows(props.data)
         ) : (
           <tr key={uniqid()}>
-            <td colSpan="7"   key={uniqid()} className="light">
+            <td colSpan="7" key={uniqid()} className="light">
               No data found
             </td>
           </tr>

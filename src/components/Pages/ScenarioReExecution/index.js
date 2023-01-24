@@ -74,7 +74,7 @@ function ScenarioReplication() {
         callSearch()
     }
 
-    const confirmduplicate = ()=>{
+    const ConfirmDuplicate = ()=>{
         setShowTestData(true)
     }
     const duplicate = ()=>{
@@ -306,7 +306,7 @@ function ScenarioReplication() {
                     isOpen = { showTestData }
                     options = { testData }
                     changeValue = { changeValueDataset }
-                    hasSameOptions={ false }
+                    hasSameOptions={ true }
                 />
                 
 
@@ -338,7 +338,7 @@ function ScenarioReplication() {
                                             data={data} 
                                             selectItems={ selectItems } 
                                             selectedItem={ selectedItem } 
-                                            duplicate={ confirmduplicate } 
+                                            duplicate={ ConfirmDuplicate } 
                                             details={ details } 
                                             update={ update }
                                             
