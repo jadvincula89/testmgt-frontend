@@ -234,6 +234,43 @@ class TestCaseTrackerIndex extends Component {
         }
         
     }
+     checkFailedorBlock(){
+       
+       
+          let count = this.state.test_data.dynamic_data.length - 1;
+          console.log(this.state.test_data.dynamic_data);
+         
+           let tempstatus = false;
+           if(count<0){
+            return false;
+           }
+        for(let i = 0; i <= count; i++){
+           
+           if( (this.state.test_data.dynamic_data[i].attr === 'Issue Number') && (this.state.test_data.dynamic_data[i].value!=='')) {
+            let values = this.state.test_data.dynamic_data[i].value;
+            let checker = (/\s/).test(values);
+            if(checker===false){
+                if(values.length ===7){
+                    let newdata = /^\d+$/.test(values.slice(2, 7));
+                   if (
+                     values[0].toUpperCase() === "I" &&
+                     values[1].toUpperCase() === "S" &&
+                     newdata=== true
+                   ) {
+                    tempstatus = true;
+                   }
+                }
+            }
+           
+             break;  
+           }
+           
+        }
+         
+        return tempstatus;
+       
+       
+     }
     changeRejectReasonValue = (e)=>{
         this.setState({ updateRejectReasonValue : e.target.value });
     }
@@ -267,6 +304,8 @@ class TestCaseTrackerIndex extends Component {
         this.setState({ showConfirmModal : false, showConfirmModalForExec: false })
     }
     saveActlRslt = () => {
+       
+        
         let ts = this.state.activeStepSelection;
         if(this.checkDynamicData() === true && this.state.updateActlRsltValue !== '' || this.checkDynamicData() === true && this.state.activeStepSelection['actualResult'] !== ""){
            
@@ -281,7 +320,7 @@ class TestCaseTrackerIndex extends Component {
                 status      : (this.state.selectedTSstatus !== "") ? this.state.selectedTSstatus : this.state.activeStepSelection['tse_status'] ,
                 issue_tracker      : this.state.activeStepSelection['issue_tracker']
             }
-            console.log(payload)
+           
             
             PostData('edit-actual-result', payload, true).then((result) => {
                 this.initTesterTC();
@@ -291,6 +330,7 @@ class TestCaseTrackerIndex extends Component {
         }else{
             this.setState({ errorSavingActlRslt : (this.state.activeStepSelection['actualResult'] === "" && this.state.updateActlRsltValue === "") ? 'Please insert Actual Result.' : ''})
         }
+       
     }
     checkDynamicData(){
         var dyData = this.state.dynamic_data
@@ -348,11 +388,13 @@ class TestCaseTrackerIndex extends Component {
 
     }
     nextCase = () =>{
-       
+      
         this.setState({ showNextCaseModal : true })
     }
     exitToNextCase = ()=>{
+      
         this.setState({ showExitToNextCaseModal : true })
+       
     }
     reject = () => {
         this.setState({ showRejectAssignmentModal : true })
@@ -389,10 +431,24 @@ class TestCaseTrackerIndex extends Component {
                 status       : this.state.exitReasonType,
                 exit_reason  : this.state.exitReason
             }
-            
-            PostData('exit-tc', payload, true).then((result) => {
-                window.location.href='/';
-            })
+            let state = this.checkFailedorBlock();
+         
+            let lock=false;
+           
+            if (
+              state === false &&
+              (this.state.exitReasonType === '7' ||
+                this.state.exitReasonType === '8')
+            ) {
+               lock=true;
+               alert("Please add Issue Number on Dynamic Data");
+             }
+             if (lock===false){
+              
+            PostData("exit-tc", payload, true).then((result) => {
+               window.location.href = "/";
+               }); 
+            }
         }else{
             this.setState({
                 errReasonType: ( this.state.exitReasonType === "" ) ? "Please select type" : '',
@@ -525,7 +581,7 @@ class TestCaseTrackerIndex extends Component {
     }
     
 	render(){ 
-        console.log(this.state)
+        
         return(
             <Container fluid>
                 <span className="spinner-holder absolute" style={{position:'fixed',zIndex:'9999'}}>

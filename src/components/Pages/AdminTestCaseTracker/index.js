@@ -35,6 +35,7 @@ function AdminTestCaseTracker() {
 	const [ keyword, setKeyword ] = useState('');
 	const [ active, setActive ] = useState('');
 	const [ rows, setRows ] = useState(0);
+	const [showScrollButton,setScrollButton]=useState(false);
 	const [ showReassignModal, setShowReassignModal ] = useState(false);
 	const [ selectedId, SetTCID ] = useState('');
 	const [ currentItems, setCurrentItems ] = useState(null);
@@ -65,6 +66,7 @@ function AdminTestCaseTracker() {
 			limit: itemsPerPage
 		};
 SetTCID('');
+ setScrollButton(false);
 		setLoading(true);
 	setStepData([]);
 		setActive(''); 
@@ -73,10 +75,9 @@ SetTCID('');
 			let responseJSON = result;
 			setLoading(false);
 			setData(responseJSON.result.result);
-
-			console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+ 
 			endOffset = itemOffset + itemsPerPage;
-			console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+		 
 			setCurrentItems(data.slice(itemOffset, endOffset));
 
 			setPageCount(Math.ceil(responseJSON.result.count.totalrows / itemsPerPage));
@@ -90,7 +91,7 @@ SetTCID('');
 	};
     const jsontocsv= (arraydata)=>{
 		var date = new Date().getTime();
-		console.log('converting...');
+	 
 			var fileName = 'test_case_' + date;
 			var exportType = 'excel';
          
@@ -196,11 +197,27 @@ SetTCID('');
 
 	useEffect(() => {
 		search();
-	}, []);
+		      window.addEventListener("scroll", (e) => handleNavigation(e));
 
+
+	}, []);
+  const handleNavigation = (e) => {
+    const window = e.currentTarget;
+ 
+    if (window.scrollY<=0) {
+     setScrollButton(false);
+    } else if (window.scrollY>0) {
+     setScrollButton(true);
+    }
+   
+  };
+   const scrollTop = (e) => {
+	  
+     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+   };
 	const handlePageClick = (event) => {
 		const newOffset = (event.selected * itemsPerPage) % data.length;
-		console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
+		//console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
 		setItemOffset(newOffset);
 		search(event.selected);
 	};
@@ -281,143 +298,179 @@ SetTCID('');
 	};
 	
 	return (
-		<Container fluid>
-			<ReviewRemarksModal
-				title="Confirm Status Change"
-				text={confirmChangeStatusMsg}
-				close={closeConfirm}
-				save={updateStatus}
-				changeRemarksValue={changeRemarksValue}
-				isOpen={openModal}
-			/>
-			<Row className="top-30 separator-border">
-				<Col xs={12} md={12}>
-					<div className="col-lg-12 col-sm-12 top-10 mb-10 ">
-						<PageTitle title="Admin Test Case/Scenario Tracker" />
-					</div>
-				</Col>
-			</Row>
-			<div className="col-md-12">
-				<Row className="top-30">
-					<Col md={12}>
-						<Card border="secondary" text="dark">
-							<Card.Body>
-								<Card.Title>Search</Card.Title>
-								<div className="col-sm-1 left mt-1">
-									<div>
-										<Form.Group className="mb-1 relative">
-											<Form.Label>
-												<i>Page Size</i>
-											</Form.Label>
-											<Form.Select name="pagesize" onChange={changePageSize}>
-												<option value="10">10</option>
-												<option value="20">20</option>
-												<option value="50">50</option>
-												<option value="100">100</option>
-												<option value="200">200</option>
-											</Form.Select>
-										</Form.Group>
-									</div>
-								</div>
+    <Container fluid>
+      <ReviewRemarksModal
+        title="Confirm Status Change"
+        text={confirmChangeStatusMsg}
+        close={closeConfirm}
+        save={updateStatus}
+        changeRemarksValue={changeRemarksValue}
+        isOpen={openModal}
+      />
+      <Row className="top-30 separator-border">
+        <Col xs={12} md={12}>
+          <div className="col-lg-12 col-sm-12 top-10 mb-10 ">
+            <PageTitle title="Admin Test Case/Scenario Tracker" />
+          </div>
+        </Col>
+      </Row>
+      <div className="col-md-12">
+    
+          <button
+            title="Go to top"
+            onClick={() => {
+            scrollTop()
+            }}
+            style={{
+			 display: showScrollButton ? 'block' : 'none',
+              position: "fixed",
+              padding: "1rem 2rem",
+              fontSize: "20px",
+              bottom: "40px",
+              right: "40px",
+              backgroundColor: "#0C9",
+              color: "#fff",
+              textAlign: "center",
+            }}
+          >
+            Top
+          </button>
+      
+        <Row className="top-30">
+          <Col md={12}>
+            <Card border="secondary" text="dark">
+              <Card.Body>
+                <Card.Title>Search</Card.Title>
+                <div className="col-sm-1 left mt-1">
+                  <div>
+                    <Form.Group className="mb-1 relative">
+                      <Form.Label>
+                        <i>Page Size</i>
+                      </Form.Label>
+                      <Form.Select name="pagesize" onChange={changePageSize}>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </div>
+                </div>
 
-								<div className="col-sm-6 left  m-1 mt-1">
-									<Form.Group className="mb-1 relative" controlId="formGroupName">
-										<Form.Label>
-											<i> Scenario/Test Case</i>
-										</Form.Label>
-										<Form.Control
-											type="text"
-											onChange={searchKeyword}
-											placeholder="Search by Scenario Title,Test Case Title,Scenario Code or Instance ID"
-											onKeyDown={keyPress}
-										/>
-										<span className="search-icon" onClick={searchButton}>
-											<SearchOutlined />
-										</span>
-									</Form.Group>
-								</div>
-								<div className="col-sm-2 left mt-1">
-									<div>
-										<Form.Group className="mb-1 relative">
-											<Form.Label>
-												<i>Filter by Status</i>
-											</Form.Label>
-											<Form.Select name="class" onChange={(e) => changeFilter(e.target.value)}>
-												<option value="0" name="changefilter">
-													--Select Class--
-												</option>
-												<option value={ASSIGNED_STATUS}>Assigned</option>
-												<option value={ABANDON_STATUS}>Abandoned</option>
-												<option value={FOR_EXECUTION_STATUS}>Ready For Execution</option>
-												<option value={IN_PROGRESS_STATUS}>In Progress</option>
-												<option value={COMPLETED_STATUS}>Completed</option>
-												<option value={FAILED_STATUS}>Failed</option>
-												<option value={FOR_REJECTION_STATUS}>For Rejection</option>
-												<option value={BLOCKED_STATUS}>Blocked</option>
-												<option value={PASSED_STATUS}>Passed</option>
-												<option value={REJECTED_STATUS}>Rejected</option>
-												<option value={REVIEW_STATUS}>Review</option>
-												
-											</Form.Select>
-										</Form.Group>
-									</div>
-								</div>
+                <div className="col-sm-6 left  m-1 mt-1">
+                  <Form.Group
+                    className="mb-1 relative"
+                    controlId="formGroupName"
+                  >
+                    <Form.Label>
+                      <i> Scenario/Test Case</i>
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      onChange={searchKeyword}
+                      placeholder="Search by Scenario Title,Test Case Title,Scenario Code or Instance ID"
+                      onKeyDown={keyPress}
+                    />
+                    <span className="search-icon" onClick={searchButton}>
+                      <SearchOutlined />
+                    </span>
+                  </Form.Group>
+                </div>
+                <div className="col-sm-2 left mt-1">
+                  <div>
+                    <Form.Group className="mb-1 relative">
+                      <Form.Label>
+                        <i>Filter by Status</i>
+                      </Form.Label>
+                      <Form.Select
+                        name="class"
+                        onChange={(e) => changeFilter(e.target.value)}
+                      >
+                        <option value="0" name="changefilter">
+                          --Select Class--
+                        </option>
+                        <option value={ASSIGNED_STATUS}>Assigned</option>
+                        <option value={ABANDON_STATUS}>Abandoned</option>
+                        <option value={FOR_EXECUTION_STATUS}>
+                          Ready For Execution
+                        </option>
+                        <option value={IN_PROGRESS_STATUS}>In Progress</option>
+                        <option value={COMPLETED_STATUS}>Completed</option>
+                        <option value={FAILED_STATUS}>Failed</option>
+                        <option value={FOR_REJECTION_STATUS}>
+                          For Rejection
+                        </option>
+                        <option value={BLOCKED_STATUS}>Blocked</option>
+                        <option value={PASSED_STATUS}>Passed</option>
+                        <option value={REJECTED_STATUS}>Rejected</option>
+                        <option value={REVIEW_STATUS}>Review</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </div>
+                </div>
 
-								<div className=" col-sm-2 right mt-3">
-									<BasicBtn title="Export to Excel" onClick={() => ExportToExcel()} />
-								</div>
-							</Card.Body>
-						</Card>
-					</Col>
-					<Col md={12} className="top-30">
-						<span className="spinner-holder absolute" style={{ position: 'fixed', zIndex: '999' }}>
-							<FadeLoader
-								style={{
-									display: 'block',
-									margin: '0 auto',
-									borderColor: 'red'
-								}}
-								sizeUnit={'px'}
-								size={10}
-								color={'#ca5d41'}
-								loading={isLoading}
-							/>
-						</span>
-						<ReviewTableAdmin
-							dropdownselected={status}
-							selectedID={selectedId}
-							data={data}
-							stepdata={stepdata!==undefined>0 && stepdata}
-							key={1}
-							selectRow={setActiveRow}
-							activeKey={active}
-							selectStatus={selectStatus}
-							option={'admin'}
-						/>
+                <div className=" col-sm-2 right mt-3">
+                  <BasicBtn
+                    title="Export to Excel"
+                    onClick={() => ExportToExcel()}
+                  />
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={12} className="top-30">
+            <span
+              className="spinner-holder absolute"
+              style={{ position: "fixed", zIndex: "999" }}
+            >
+              <FadeLoader
+                style={{
+                  display: "block",
+                  margin: "0 auto",
+                  borderColor: "red",
+                }}
+                sizeUnit={"px"}
+                size={10}
+                color={"#ca5d41"}
+                loading={isLoading}
+              />
+            </span>
+            <ReviewTableAdmin
+              dropdownselected={status}
+              selectedID={selectedId}
+              data={data}
+              stepdata={stepdata !== undefined > 0 && stepdata}
+              key={1}
+              selectRow={setActiveRow}
+              activeKey={active}
+              selectStatus={selectStatus}
+              option={"admin"}
+            />
 
-						<ReactPaginate
-							breakLabel="..."
-							nextLabel="next >"
-							onPageChange={handlePageClick}
-							pageRangeDisplayed={5}
-							pageCount={pageCount}
-							previousLabel="< previous"
-							pageClassName="page-item"
-							pageLinkClassName="page-link"
-							previousClassName="page-item"
-							previousLinkClassName="page-link"
-							nextClassName="page-item"
-							nextLinkClassName="page-link"
-							breakClassName="page-item"
-							breakLinkClassName="page-link"
-							containerClassName="pagination"
-							activeClassName="active"
-							renderOnZeroPageCount={null}
-						/>
-					</Col>
-				</Row>
-			</div>
-		</Container>
-	);
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel="next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel="< previous"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+              renderOnZeroPageCount={null}
+            />
+          </Col>
+        </Row>
+      </div>
+    </Container>
+  );
 }
 export default AdminTestCaseTracker;
