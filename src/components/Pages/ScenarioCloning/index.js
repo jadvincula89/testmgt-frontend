@@ -127,7 +127,7 @@ function ScenarioCloning() {
     }
     const updateStatus = () =>{
         var activeKey = active;
-      
+      console.log('test')
         let payload = {
             'from' : from,
             'to' : to,
